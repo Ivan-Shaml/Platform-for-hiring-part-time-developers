@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Developers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DeveloperRequest;
 use App\Models\Developer;
 use App\Models\Hire;
+use App\Services\DeveloperService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +20,7 @@ class DevelopersController extends Controller
      */
     public function index()
     {
-        $developer = Developer::all();
+        $developer = DeveloperService::getDeveloper();
         return view('developers', compact('developer'));
     }
 
@@ -82,17 +84,6 @@ class DevelopersController extends Controller
             ]);
             $developer->save(); // Finally, save the record.
         }
-
-//        if ($request->profile_picture) {
-//            $imageName = time() . '.' . $request->file('image')->extension();
-//            $request->file('image')->storeAs('public/images', $imageName);
-//            $image = $imageName;
-//            $data->profile_picture = $image;
-//        }
-//        Developer::create($request->all());
-
-//        $show = Developer::create($validatedData);
-//        $data->save();
         return redirect('/developers')->with('success', 'Developer is successfully saved');
     }
 
@@ -132,73 +123,24 @@ class DevelopersController extends Controller
      * @param  \App\Models\Developer  $developer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(DeveloperRequest $request, $id)
     {
-        $developer = $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'nullable',
-            'phone' => 'nullable',
-            'location' => 'nullable',
-//            'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'price_per_hour' => 'nullable',
-            'technology' => 'nullable',
-            'description' => 'nullable',
-            'years_of_experience' => 'nullable',
-            'native_language' => 'nullable',
-            'linkedin_profile_link' => 'nullable',
+        $data = $request->validated();
+        $data = $request->safe()->only([
+            'name',
+            'email',
+            'phone',
+            'location',
+            'profile_picture',
+            'price_per_hour',
+            'technology',
+            'description',
+            'years_of_experience',
+            'native_language',
+            'linkedin_profile_link',
         ]);
 
-        $developer = Developer::find($id);
-
-        if($request->has('profile_picture')){
-            Storage::disk('public')->delete('developer/'.$developer->profile_picture);
-            $imageName = time().'.'.$request->file('profile_picture')->extension();
-            $request->file('profile_picture')->storeAs('public/developer', $imageName);
-            $developer->profile_picture = $imageName;
-        }
-
-        $developer->name=$request->name;
-        $developer->email=$request->email;
-        $developer->phone=$request->phone;
-        $developer->location=$request->location;
-        $developer->price_per_hour=$request->price_per_hour;
-        $developer->technology=$request->technology;
-        $developer->description=$request->description;
-        $developer->years_of_experience=$request->years_of_experience;
-        $developer->native_language=$request->native_language;
-        $developer->linkedin_profile_link=$request->linkedin_profile_link;
-//        $developer->save();
-
-
-        $hire = Hire::where('developer_id', $id)->get();
-        foreach($hire as $single_hire) {
-            $single_hire->names = $request->get('name', 'No Data');
-//            $single_hire->names = $developer->name;
-            $single_hire->save();
-        }
-
-        $developer->save();
-
-
-//        $hire->save();
-//
-        $developer->hires()->associate($hire);
-
-
-//        $hire = Hire::where('developer_id', '=', 1)->first();
-//        $hire->names = $request->input('names');
-//        $hire->save();
-////
-////        $developer->hires()->associate($hire);
-//
-//        $hire = Hire::all();
-//        $status = $request->validate([
-//            'names' => 'required|string'
-//        ]);
-//
-//        $hire->hires()->update($status);
-
-
+      DeveloperService::updateDeveloper($id, $data);
 
         return redirect('/developers')->with('success', `Developer Data is successfully updated`);
     }
