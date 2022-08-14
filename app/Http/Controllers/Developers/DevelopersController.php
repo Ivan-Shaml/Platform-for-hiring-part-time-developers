@@ -40,50 +40,12 @@ class DevelopersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DeveloperRequest $request)
     {
-        $data= new Developer();
 
-        $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'nullable',
-            'phone' => 'nullable',
-            'location' => 'nullable',
-            'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'price_per_hour' => 'nullable',
-            'technology' => 'nullable',
-            'description' => 'nullable',
-            'years_of_experience' => 'nullable',
-            'native_language' => 'nullable',
-            'linkedin_profile_link' => 'nullable',
-        ]);
+        $data = $request->validated();
 
-        // ensure the request has a file before we attempt anything else.
-        if ($request->hasFile('profile_picture')) {
-
-            $request->validate([
-                'profile_picture' => 'mimes:jpeg,bmp,png' // Only allow .jpg, .bmp and .png file types.
-            ]);
-
-            // Save the file locally in the storage/public/ folder under a new folder named /product
-            $request->file('profile_picture')->store('developer', 'public');
-
-            // Store the record, using the new file hashname which will be it's new filename identity.
-            $developer = new Developer([
-                'name' => $request->get('name'),
-                'email' => $request->get('email'),
-                'phone' => $request->has('phone') ? $request->input('phone') : NULL,
-                'location' => $request->get('location'),
-                'profile_picture' => $request->file('profile_picture')->hashName(),
-                'price_per_hour' => $request->has('price_per_hour') ? $request->input('price_per_hour') : NULL,
-                'technology' => $request->get('technology'),
-                'description' => $request->get('description'),
-                'years_of_experience' => $request->has('years_of_experience') ? $request->input('years_of_experience') : NULL,
-                'native_language' => $request->get('native_language'),
-                'linkedin_profile_link' => $request->get('linkedin_profile_linkname'),
-            ]);
-            $developer->save(); // Finally, save the record.
-        }
+        DeveloperService::createDeveloper($request, $data);
         return redirect('/developers')->with('success', 'Developer is successfully saved');
     }
 
@@ -109,7 +71,7 @@ class DevelopersController extends Controller
      * @param  \App\Models\Developer  $developer
      * @return \Illuminate\Http\Response
      */
-    public function edit(Developer $developer, $id)
+    public function edit($id)
     {
         $developers = Developer::findOrFail($id);
         return view('edit', compact('developers'));
@@ -126,19 +88,6 @@ class DevelopersController extends Controller
     public function update(DeveloperRequest $request, $id)
     {
         $data = $request->validated();
-        $data = $request->safe()->only([
-            'name',
-            'email',
-            'phone',
-            'location',
-            'profile_picture',
-            'price_per_hour',
-            'technology',
-            'description',
-            'years_of_experience',
-            'native_language',
-            'linkedin_profile_link',
-        ]);
 
       DeveloperService::updateDeveloper($id, $data);
 
@@ -153,9 +102,7 @@ class DevelopersController extends Controller
      */
     public function destroy($id)
     {
-        $developers = Developer::find($id);
-        Storage::disk('public')->delete('developer/'.$developers->profile_picture);
-        $developers->delete();
+        DeveloperService::deleteDeveloper($id);
         return redirect('/developers')->with('success', 'Developer Data is successfully deleted');
     }
 }
