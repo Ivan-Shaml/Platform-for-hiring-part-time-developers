@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
+use App\Http\Requests\DeveloperRequest;
 use App\Models\Developer;
 use App\Models\Hire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Console\Input\Input;
 
 class DeveloperService {
 
@@ -15,8 +18,24 @@ class DeveloperService {
         return Developer::all();
     }
 
-    public static function updateDeveloper($id, $data) {
+    public static function createDeveloper($data) {
+        $developer = new Developer();
+        self::handleUploadedImage('profile_picture', $developer);
+        $developer->name=$data['name'];
+        $developer->email=$data['email'];
+        $developer->phone=$data['phone'];
+        $developer->location=$data['location'];
+//        $developer->profile_picture=$data['profile_picture'];
+        $developer->price_per_hour=$data['price_per_hour'];
+        $developer->technology=$data['technology'];
+        $developer->description=$data['description'];
+        $developer->years_of_experience=$data['years_of_experience'];
+        $developer->native_language=$data['native_language'];
+        $developer->linkedin_profile_link=$data['linkedin_profile_link'];
+        $developer->save();
+    }
 
+    public static function updateDeveloper($id, $data) {
         $developer = Developer::find($id);
         self::handleUploadedImage('profile_picture', $developer);
 
@@ -38,7 +57,7 @@ class DeveloperService {
             $single_hire->save();
         }
 
-        $developer->save();
+        $developer->update();
         $developer->hires()->associate($hire);
     }
 
@@ -52,6 +71,12 @@ class DeveloperService {
                 $data_from->profile_picture = $imageName;
             }
         }
+    }
+
+    public static function deleteDeveloper($id) {
+        $developers = Developer::find($id);
+        Storage::disk('public')->delete('developer/'.$developers->profile_picture);
+        $developers->delete();
     }
 
 
