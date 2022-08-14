@@ -8,6 +8,9 @@
                 <label for="developer_name" class="form-label">Name of Developer:</label>
                 <input type="text" class="form-control" name="name" id="developer_name"
                        placeholder="Name of Developer">
+                @if ($errors->has('name'))
+                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                @endif
             </div>
             <div class="form-group col-12">
                 <label for="developer_email" class="form-label">Email of Developer:</label>
