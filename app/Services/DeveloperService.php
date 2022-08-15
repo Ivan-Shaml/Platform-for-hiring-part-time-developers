@@ -18,8 +18,7 @@ class DeveloperService {
         return Developer::all();
     }
 
-    public static function createDeveloper($data) {
-        $developer = new Developer();
+    public static function handleData($developer, $data) {
         self::handleUploadedImage('profile_picture', $developer);
         $developer->name=$data['name'];
         $developer->email=$data['email'];
@@ -35,29 +34,21 @@ class DeveloperService {
         $developer->save();
     }
 
+    public static function createDeveloper($data) {
+        $developer = new Developer();
+        self::handleData($developer, $data);
+    }
+
     public static function updateDeveloper($id, $data) {
         $developer = Developer::find($id);
-        self::handleUploadedImage('profile_picture', $developer);
-
-        $developer->name=$data['name'];
-        $developer->email=$data['email'];
-        $developer->phone=$data['phone'];
-        $developer->location=$data['location'];
-//        $developer->profile_picture=$data['profile_picture'];
-        $developer->price_per_hour=$data['price_per_hour'];
-        $developer->technology=$data['technology'];
-        $developer->description=$data['description'];
-        $developer->years_of_experience=$data['years_of_experience'];
-        $developer->native_language=$data['native_language'];
-        $developer->linkedin_profile_link=$data['linkedin_profile_link'];
 
         $hire = Hire::where('developer_id', $id)->get();
         foreach($hire as $single_hire) {
             $single_hire->names = request()->get('name', 'No Data');
             $single_hire->save();
         }
-
-        $developer->update();
+        self::handleData($developer, $data);
+//        $developer->update();
         $developer->hires()->associate($hire);
     }
 
@@ -78,6 +69,5 @@ class DeveloperService {
         Storage::disk('public')->delete('developer/'.$developers->profile_picture);
         $developers->delete();
     }
-
 
 }

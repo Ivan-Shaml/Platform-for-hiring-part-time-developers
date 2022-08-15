@@ -45,7 +45,7 @@ class DevelopersController extends Controller
 
         $data = $request->validated();
 
-        DeveloperService::createDeveloper($request, $data);
+        DeveloperService::createDeveloper($request);
         return redirect('/developers')->with('success', 'Developer is successfully saved');
     }
 
