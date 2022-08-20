@@ -39,7 +39,7 @@ class HireRequest extends FormRequest
     public function messages()
     {
         return [
-            'names.required' => 'Choosing names is required!',
+            'names.required' => 'Choosing at least one developer is required!',
             'start_date.required' => 'Start Date is required!',
             'end_date.required' => 'End Date is required!'
         ];

@@ -24,17 +24,26 @@ class DeveloperRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|max:255',
-            'email' => 'nullable',
-            'phone' => 'nullable',
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|email|unique:developers,email',
+            'phone' => 'nullable|numeric|digits:10',
             'location' => 'nullable',
             'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'price_per_hour' => 'nullable',
+            'price_per_hour' => 'nullable|integer|min:1|max:100',
             'technology' => 'nullable',
             'description' => 'nullable',
-            'years_of_experience' => 'nullable',
+            'years_of_experience' => 'nullable|integer|min:1|max:100',
             'native_language' => 'nullable',
             'linkedin_profile_link' => 'nullable',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'The name is required.',
+            'email.required' => 'Invalid email value.',
+            'phone.required' => 'Phone number must be 10 digits.',
         ];
     }
 }
