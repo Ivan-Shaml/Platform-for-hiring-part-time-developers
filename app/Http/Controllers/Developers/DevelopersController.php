@@ -7,71 +7,62 @@ use App\Http\Requests\DeveloperRequest;
 use App\Models\Developer;
 use App\Models\Hire;
 use App\Services\DeveloperService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class DevelopersController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of al developers.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         $developer = DeveloperService::getDeveloper();
         return view('developers', compact('developer'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new developer.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         return view('create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created developer in Database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param DeveloperRequest $request - Retrieve the input from the custom request class that were submitted by the client.
+     * @return RedirectResponse
      */
-    public function store(DeveloperRequest $request)
+    public function store(DeveloperRequest $request): RedirectResponse
     {
-
-        $data = $request->validated();
-
         DeveloperService::createDeveloper($request);
         return redirect('/developers')->with('success', 'Developer is successfully saved');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Developer  $developer
-     * @return \Illuminate\Http\Response
+     * Show all information about specified developer.
+     * @param $id
+     * @return View
      */
-    public function show(Developer $developer)
+    public function developerProfile($id): View
     {
-
-    }
-
-    public function getDeveloper($id) {
         $get_dev_profile = Developer::find($id);
         return view('profile', compact('get_dev_profile'))->with('success', 'Developer is successfully saved');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified developer.
      *
-     * @param  \App\Models\Developer  $developer
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return View
      */
-    public function edit($id)
+    public function edit($id): View
     {
         $developers = Developer::findOrFail($id);
         return view('edit', compact('developers'));
@@ -79,28 +70,25 @@ class DevelopersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified developer in database.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Developer  $developer
-     * @return \Illuminate\Http\Response
+     * @param DeveloperRequest $request - Obtain client request for updating specified developer
+     * @param $id
+     * @return RedirectResponse
      */
-    public function update(DeveloperRequest $request, $id)
+    public function update(DeveloperRequest $request, $id): RedirectResponse
     {
-        $data = $request->validated();
-
-      DeveloperService::updateDeveloper($id, $data);
-
-        return redirect('/developers')->with('success', `Developer Data is successfully updated`);
+        DeveloperService::updateDeveloper($request, $id);
+        return redirect('/developers')->with('success', 'Developer Data is successfully updated');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified developer from database.
      *
-     * @param  \App\Models\Developer  $developer
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return RedirectResponse
      */
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
         DeveloperService::deleteDeveloper($id);
         return redirect('/developers')->with('success', 'Developer Data is successfully deleted');

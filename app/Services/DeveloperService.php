@@ -13,60 +13,53 @@ use Symfony\Component\Console\Input\Input;
 
 class DeveloperService {
 
-
-    public static function getDeveloper() {
+    /**
+     * Return all exising developers.
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getDeveloper()
+    {
         return Developer::all();
     }
 
-    public static function handleData($developer, $data) {
-        self::handleUploadedImage('profile_picture', $developer);
-        $developer->name=$data['name'];
-        $developer->email=$data['email'];
-        $developer->phone=$data['phone'];
-        $developer->location=$data['location'];
-//        $developer->profile_picture=$data['profile_picture'];
-        $developer->price_per_hour=$data['price_per_hour'];
-        $developer->technology=$data['technology'];
-        $developer->description=$data['description'];
-        $developer->years_of_experience=$data['years_of_experience'];
-        $developer->native_language=$data['native_language'];
-        $developer->linkedin_profile_link=$data['linkedin_profile_link'];
-        $developer->save();
+    public static function createDeveloper(DeveloperRequest $request) {
+        Developer::create(array_merge($request->validated(), [
+            'profile_picture' => self::handleUploadedImage($request, 'profile_picture')
+        ]));
     }
 
-    public static function createDeveloper($data) {
-        $developer = new Developer();
-        self::handleData($developer, $data);
-    }
-
-    public static function updateDeveloper($id, $data) {
+    public static function updateDeveloper(DeveloperRequest $request, $id) {
         $developer = Developer::find($id);
 
-        $hire = Hire::where('developer_id', $id)->get();
-        foreach($hire as $single_hire) {
-            $single_hire->names = request()->get('name', 'No Data');
-            $single_hire->save();
+        if($request->hasFile('profile_picture')){
+            $developer->update(array_merge($request->validated(), ['profile_picture' => self::handleUploadedImage($request, 'profile_picture')]));
+        } else {
+            $developer->update($request->except('profile_picture'));
         }
-        self::handleData($developer, $data);
-//        $developer->update();
-        $developer->hires()->associate($hire);
+        // When developer is updated, it's record(s) also take the corresponding changes in the 'hire_developers' table.
+        HireService::updateHires($request, $id);
     }
 
-    public static function handleUploadedImage($image, $data_from): void
+    public static function handleUploadedImage($request, $image): string
     {
+        $image_name = '';
         if (!is_null($image)) {
-            if(request()->has($image)){
-                Storage::disk('public')->delete('developer/'.$data_from[$image]);
-                $imageName = time().'.'.request()->file($image);
-                request()->file('profile_picture')->storeAs('public/developer', $imageName);
-                $data_from->profile_picture = $imageName;
+            if($request->hasFile($image)){
+                $image = $request->file($image);
+                $image_name = 'developer/'.$image->hashName();
+                $image->storeAs('public', $image_name);
             }
         }
+        return $image_name;
     }
+
 
     public static function deleteDeveloper($id) {
         $developers = Developer::find($id);
-        Storage::disk('public')->delete('developer/'.$developers->profile_picture);
+        $image_name = '/storage/'.$developers->profile_picture;
+        if(is_file(public_path($image_name))){
+            unlink(public_path($image_name));
+        }
         $developers->delete();
     }
 

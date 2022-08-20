@@ -15,7 +15,7 @@ use Illuminate\Validation\Rule;
 class HireController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the hired developer resources.
      *
      * @return \Illuminate\Http\Response
      */
@@ -25,34 +25,29 @@ class HireController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for hiring new developer(s).
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
         // Undefined variable: $hire_devs -- Solution: create and store/get and post -- need to the the same routes (/hire)
-        $hire_devs = Developer::all();
-        $hired = // DB::table('developers')
-                        Developer::select('*')
+        $list_developers_for_hire = Developer::all();
+        $hired_developers = Developer::select('*')
                         ->join('hire_developers', 'developers.name', '=', 'hire_developers.names')
                         ->get();
-//        $hired = DB::select('SELECT d.*, h.* FROM developers d INNER JOIN hire_developers h ON d.name = h.names');
-        return view('hire', compact('hire_devs', 'hired'));
+        return view('hire', compact('list_developers_for_hire', 'hired_developers'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a record for hired developer(s) in database.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(HireRequest $request)
     {
-        $request->validated();
-
         HireService::storeHire($request);
-
         return redirect('/hire')->with("sdasdsa");
     }
 
@@ -91,7 +86,7 @@ class HireController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified hired developer from database.
      *
      * @param  \App\Models\Hire  $hire
      * @return \Illuminate\Http\Response
