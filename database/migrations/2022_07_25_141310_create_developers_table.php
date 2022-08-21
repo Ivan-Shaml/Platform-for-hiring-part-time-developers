@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
 //            $table->string('id', 36)->primary();
             $table->string('name');
-            $table->string('email')->nullable();
+            $table->string('email')->unique()->nullable();
             $table->bigInteger('phone')->nullable();
             $table->string('location')->nullable();
             $table->string('profile_picture')->nullable();
