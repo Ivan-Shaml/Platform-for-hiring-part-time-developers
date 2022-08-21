@@ -25,7 +25,7 @@ class DeveloperRequest extends FormRequest
     {
         return [
             'name' => 'nullable|string|max:255',
-            'email' => 'nullable|email|unique:developers,email',
+            'email' => 'required|unique:developers,email,'.$this->id,
             'phone' => 'nullable|numeric|digits:10',
             'location' => 'nullable',
             'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
@@ -43,6 +43,7 @@ class DeveloperRequest extends FormRequest
         return [
             'name.required' => 'The name is required.',
             'email.required' => 'Invalid email value.',
+            'email.unique' => 'Email must be unique.',
             'phone.required' => 'Phone number must be 10 digits.',
         ];
     }
