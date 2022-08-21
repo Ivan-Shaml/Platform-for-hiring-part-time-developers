@@ -12,16 +12,25 @@
             <input type="text" class="form-control" id="name" name="name"
                    value="{{$developers->name}}"
                    placeholder="Edit Name">
+            @if ($errors->has('name'))
+                <span class="text-danger">{{ $errors->first('name') }}</span>
+            @endif
         </div>
         <div class="form-group col-12">
             <label for="email" class="form-label">Edit Email:</label>
-            <input type="text" class="form-control" id="email" name="email" value="{{$developers->email}}"
+            <input type="email" class="form-control" id="email" name="email" value="{{$developers->email}}"
                    placeholder="Edit Email">
+            @if ($errors->has('email'))
+                <span class="text-danger">{{ $errors->first('email') }}</span>
+            @endif
         </div>
         <div class="form-group col-12">
             <label for="phone" class="form-label">Edit Phone:</label>
             <input type="text" class="form-control" id="phone" name="phone" value="{{$developers->phone}}"
                    placeholder="Edit Phone">
+            @if ($errors->has('phone'))
+                <span class="text-danger">{{ $errors->first('phone') }}</span>
+            @endif
         </div>
         <div class="form-group col-12">
             <label for="location" class="form-label">Edit Location:</label>

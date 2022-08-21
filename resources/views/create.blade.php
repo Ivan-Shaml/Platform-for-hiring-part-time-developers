@@ -14,12 +14,18 @@
             </div>
             <div class="form-group col-12">
                 <label for="developer_email" class="form-label">Email of Developer:</label>
-                <input type="text" class="form-control" name="email" id="developer_email"
+                <input type="email" class="form-control" name="email" id="developer_email"
                        placeholder="Email of Developer">
+                @if ($errors->has('email'))
+                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                @endif
             </div>
             <div class="form-group col-12">
                 <label for="phone" class="form-label">Phone of Developer:</label>
-                <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone of Developer">
+                <input type="tel" class="form-control" name="phone" id="phone" placeholder="Phone of Developer">
+                @if ($errors->has('phone'))
+                    <span class="text-danger">{{ $errors->first('phone') }}</span>
+                @endif
             </div>
             <div class="form-group col-12">
                 <label for="location" class="form-label">Location of Developer:</label>
@@ -38,7 +44,7 @@
             <div class="form-group col-12">
                 <label for="inputState">Technology:</label>
                 <select name="technology" class="form-control">
-                    <option value="">---Select Option---</option>
+                    <option value="">---Select Technology---</option>
                     <option value="JavaScript">JavaScript</option>
                     <option value="Java">Java</option>
                     <option value=".NET">.NET</option>
