@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\Developer;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Developer>
@@ -20,12 +22,14 @@ class DeveloperFactory extends Factory
      */
     public function definition()
     {
+        $image = $this->faker->image();
+        $imageFile = new File($image);
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->numerify('##########'),
             'location' => fake()->word(),
-            'profile_picture' => $this->faker->image('public/storage/developer',400,300, null, false),
+            'profile_picture' => Storage::disk('public')->putFile('developer', $imageFile),
             'price_per_hour' => fake()->numberBetween(20, 100),
             'technology' => fake()->randomElement(["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"]),
             'description' => fake()->text(),
