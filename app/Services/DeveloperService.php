@@ -4,12 +4,6 @@ namespace App\Services;
 
 use App\Http\Requests\DeveloperRequest;
 use App\Models\Developer;
-use App\Models\Hire;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
-use Symfony\Component\Console\Input\Input;
 
 class DeveloperService {
 
@@ -32,7 +26,7 @@ class DeveloperService {
         $developer = Developer::find($id);
 
         if($request->hasFile('profile_picture')){
-            $developer->update(array_merge($request->validated(), ['profile_picture' => self::handleUploadedImage($request, 'profile_picture')]));
+            $developer->update(array_merge($request->validated(), [ 'profile_picture' => self::handleUploadedImage($request, 'profile_picture') ]));
         } else {
             $developer->update($request->except('profile_picture'));
         }
