@@ -36,7 +36,7 @@ Route::group(['namespace' => 'Developers'], function() {
     Route::get('/developers/delete/{id}', [DevelopersController::class, 'destroy'])->name('developers.destroy');
     Route::delete('/developers/delete/{id}', [DevelopersController::class, 'destroy'])->name('developers.destroy');
 
-    Route::get('/developers/profile/{id}', [DevelopersController::class, 'getDeveloper'])->name('hire.show');
+    Route::get('/developers/profile/{id}', [DevelopersController::class, 'developerProfile'])->name('hire.show');
 });
 
 
