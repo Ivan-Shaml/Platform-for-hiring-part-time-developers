@@ -49,12 +49,13 @@ class DeveloperService {
 
 
     public static function deleteDeveloper($id) {
-        $developers = Developer::find($id);
-        $image_name = '/storage/'.$developers->profile_picture;
-        if(is_file(public_path($image_name))){
-            unlink(public_path($image_name));
-        }
-        $developers->delete();
+            $developers = Developer::find($id);
+            $image_name = '/storage/developer/'.$developers->profile_picture;
+//            dd(public_path($image_name));
+            if(is_file(public_path($image_name))){
+                unlink(public_path($image_name));
+            }
+            $developers->delete();
     }
 
 }
