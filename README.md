@@ -9,7 +9,7 @@
 
 # About
 
-    This is a platform for creating developer profiles and hiring them for a certain peiod of time. The hire can by gorup or single hire. The profiles containg attributes like technology/language that the developer work on, years of experience, price peh hour billing, LinkedIn profile link, small description, etc. 
+    This is a platform for creating developer profiles and hiring them for a certain peiod of time. The hire can by gorup or single hire. The profiles containg attributes like technology/language that the developer work on, years of experience, price peh hour billing, LinkedIn profile link, small description, etc.
 
 ## Installation
 
@@ -21,9 +21,9 @@ Switch to the repo folder
 
     cd Platform-for-hiring-part-time-developers
 
-Install all the dependencies using composer
-
-    composer install
+Update and install all the dependencies using composer
+composer update
+composer install
 
 Copy the example env file and make the required configuration changes in the .env file
 
@@ -33,6 +33,9 @@ Generate a new application key
 
     php artisan storage:link
 
+and
+
+    php artisan key:generate
 
 Run the database migrations (**Set the database connection in .env before migrating**)
 
@@ -51,7 +54,7 @@ You can now access the server at http://localhost:8000
     composer install
     cp .env.example .env
     php artisan storage:link
-    
+
 **Make sure you set the correct database connection information before running the migrations** [Environment variables](#environment-variables)
 
     php artisan migrate
@@ -63,29 +66,27 @@ Run the database seeder
 
     php artisan db:seed
 
-***Note*** : It's recommended to have a clean database before seeding. You can refresh your migrations at any point to clean the database by running the following command
+**_Note_** : It's recommended to have a clean database before seeding. You can refresh your migrations at any point to clean the database by running the following command
 
     php artisan migrate:refresh
 
 The api can be accessed at [http://localhost:8000/api](http://localhost:8000/api).
 
-
-----------
+---
 
 # Code overview
 
 ## Dependencies
 
-- [smknstd/fakerphp-picsum-images](https://packagist.org/packages/smknstd/fakerphp-picsum-images) - For generating fake images
-
+-   [smknstd/fakerphp-picsum-images](https://packagist.org/packages/smknstd/fakerphp-picsum-images) - For generating fake images
 
 ## Environment variables
 
-- `.env` - Environment variables can be set in this file
+-   `.env` - Environment variables can be set in this file
 
-***Note*** : You can quickly set the database information and other variables in this file and have the application fully working.
+**_Note_** : You can quickly set the database information and other variables in this file and have the application fully working.
 
-----------
+---
 
 # Testing API
 
