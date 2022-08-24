@@ -23,7 +23,7 @@
                 <td>{{ $dev->name }}</td>
                 <td>{{ $dev->email }}</td>
                 <td>
-                    <img src="{{ asset('storage/'.$dev->profile_picture) }}"
+                    <img src="{{ asset('storage/developer/'.$dev->profile_picture) }}"
                          style="height: 100px; width: 150px;"></td>
                 <td>{{ $dev->price_per_hour }}</td>
                 <td>{{ $dev->technology }}</td>
