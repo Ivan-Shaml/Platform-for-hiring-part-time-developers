@@ -16,6 +16,6 @@ class HireTableSeeder extends Seeder
      */
     public function run()
     {
-        Hire::factory()->count(5)->create();
+//        Hire::factory()->count(5)->create();
     }
 }
