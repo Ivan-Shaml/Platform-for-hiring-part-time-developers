@@ -23,19 +23,48 @@ class DeveloperRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'nullable|string|max:255',
-            'email' => 'required|unique:developers,email,'.$this->id,
-            'phone' => 'nullable|numeric|digits:10',
-            'location' => 'nullable',
-            'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'price_per_hour' => 'nullable|integer|min:1|max:100',
-            'technology' => 'nullable',
-            'description' => 'nullable',
-            'years_of_experience' => 'nullable|integer|min:1|max:100',
-            'native_language' => 'nullable',
-            'linkedin_profile_link' => 'nullable',
-        ];
+        switch($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                return [
+                    'name' => 'required|string|min:5|max:255',
+                    'email' => 'required',
+                    'phone' => 'nullable|numeric|digits:10',
+                    'location' => 'nullable',
+                    'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                    'price_per_hour' => 'nullable|integer|min:1|max:100',
+                    'technology' => 'nullable',
+                    'description' => 'nullable',
+                    'years_of_experience' => 'nullable|integer|min:1|max:100',
+                    'native_language' => 'nullable',
+                    'linkedin_profile_link' => 'nullable',
+                ];
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                return [
+                    'name' => 'nullable|string|min:5|max:255',
+                    'email' => 'nullable|unique:developers,email,'.$this->id,
+                    'phone' => 'nullable|numeric|digits:10',
+                    'location' => 'nullable',
+                    'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                    'price_per_hour' => 'nullable|integer|min:1|max:100',
+                    'technology' => 'nullable',
+                    'description' => 'nullable',
+                    'years_of_experience' => 'nullable|integer|min:1|max:100',
+                    'native_language' => 'nullable',
+                    'linkedin_profile_link' => 'nullable',
+                ];
+            }
+            default:break;
+        }
     }
 
     public function messages()
