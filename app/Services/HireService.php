@@ -2,18 +2,29 @@
 namespace App\Services;
 
 use App\Http\Requests\DeveloperRequest;
+use App\Http\Requests\HireRequest;
 use App\Models\Developer;
 use App\Models\Hire;
 use Illuminate\Http\Request;
 
 class HireService{
 
+
+    /**
+     * Return all exising developers.
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getHire(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Hire::all();
+    }
+
     /**
      * Hire existing developer(s) from a list without dates overlap
-     * @param Request $request - Obtain the client HTTP request.
-     * @return void
+     * @param HireRequest $request - Obtain the client HTTP request.
+//     * @return void
      */
-    public static function storeHire(Request $request) {
+    public static function storeHire(HireRequest $request) {
         // Select all from developer where name = names from hire_developers
         $hire_devs_by_names = Developer::where('name', $request->names)->get();
 
