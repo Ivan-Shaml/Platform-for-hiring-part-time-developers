@@ -23,11 +23,23 @@ class HireRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'names' => 'required',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date'
-        ];
+        switch($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                return [
+                    'names' => 'nullable',
+                    'start_date' => 'nullable|date',
+                    'end_date' => 'nullable|date'
+                ];
+            }
+            default:break;
+        }
     }
 
 
