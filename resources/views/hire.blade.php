@@ -50,7 +50,7 @@
             <tbody>
             <tr>
                 <td> {{ e($hired_developer->names) }} </td>
-                <td><img src="{{ url('storage/developer/'.$hired_developer->profile_picture) }}"
+                <td><img src="{{ asset('storage/developer/'.$hired_developer->profile_picture) }}"
                          style="height: 100px; width: 150px;" alt="Profile image of the hired developer"></td>
                 <td> {{ $hired_developer->start_date }} </td>
                 <td> {{ $hired_developer->end_date }} </td>
