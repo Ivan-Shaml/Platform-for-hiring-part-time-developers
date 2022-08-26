@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\Developer;
+use App\Http\Controllers\Api\DevelopersApiController;
+use App\Http\Controllers\Api\HireApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,47 +20,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//
+//Route::get('/', function() {
+//   return Developer::all();
+//});
+Route::group(['namespace' => 'Developers'], function() {
 
-Route::get('/', function() {
-   return Developer::all();
+    Route::get('/', [DevelopersApiController::class, 'index']);
+
+    Route::post('/developers', [DevelopersApiController::class, 'create']);
+
+    Route::put('/developers/edit/{developer}', [DevelopersApiController::class, 'update']);
+
+    Route::delete('/developers/delete/{developer}', [DevelopersApiController::class, 'destroy']);
 });
 
-Route::post('/developers', function() {
-    return Developer::create([
-        'name' => request('name'),
-        'email' => request('email'),
-        'phone' => request('phone'),
-        'location' => request('location'),
-        'profile_picture' => request('profile_picture'),
-        'price_per_hour' => request('price_per_hour'),
-        'technology' => request('technology'),
-        'description' => request('description'),
-        'years_of_experience' => request('years_of_experience'),
-        'native_language' => request('native_language'),
-        'linkedin_profile_link' => request('linkedin_profile_link'),
-    ]);
-});
+Route::group(['namespace' => 'Hire'], function() {
 
-Route::put('/developers/edit/{developer}', function(Developer $developer){
-    $developer->update([
-        'name' => request('name'),
-        'email' => request('email'),
-        'phone' => request('phone'),
-        'location' => request('location'),
-        'profile_picture' => request('profile_picture'),
-        'price_per_hour' => request('price_per_hour'),
-        'technology' => request('technology'),
-        'description' => request('description'),
-        'years_of_experience' => request('years_of_experience'),
-        'native_language' => request('native_language'),
-        'linkedin_profile_link' => request('linkedin_profile_link'),
-    ]);
-});
+    Route::get('/hire', [HireApiController::class, 'index']);
 
-Route::delete('/developers/delete/{developer}', function(Developer $developer) {
-       $success_delete = $developer->delete();
+    Route::post('/hire', [HireApiController::class, 'create']);
 
-       return [
-         'success' => $success_delete
-       ];
+    Route::delete('/hire/delete/{hire}', [HireApiController::class, 'destroy']);
 });
