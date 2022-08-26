@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\DeveloperRequest;
 use App\Models\Developer;
+use Illuminate\Support\Facades\Storage;
 
 class DeveloperService {
 
@@ -39,22 +40,25 @@ class DeveloperService {
         $image_name = '';
         if (!is_null($image)) {
             if($request->hasFile($image)){
-                $image = $request->file($image);
-                $image_name = 'developer/'.$image->hashName();
-                $image->storeAs('public', $image_name);
+//                $image = $request->file($image);
+//                $image_name = 'developer/'.$image->hashName();
+//                $image->storeAs('public', $image_name);
+                $storageImage = Storage::putFile('public/developer', $request->file($image));
             }
         }
-        return $image_name;
+        return str_replace('public/developer/', '', $storageImage);
+//        return $image_name;
     }
 
 
     public static function deleteDeveloper($id) {
             $developers = Developer::find($id);
-            $image_name = '/storage/developer/'.$developers->profile_picture;
+//            $image_name = '/storage/developer/'.$developers->profile_picture;
 //            dd(public_path($image_name));
-            if(is_file(public_path($image_name))){
-                unlink(public_path($image_name));
-            }
+//            if(is_file(public_path($image_name))){
+//                unlink(public_path($image_name));
+//            }
+            Storage::disk('public')->delete('developer/'.$developers->profile_picture);
             $developers->delete();
     }
 
