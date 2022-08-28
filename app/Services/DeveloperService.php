@@ -43,10 +43,10 @@ class DeveloperService {
 //                $image = $request->file($image);
 //                $image_name = 'developer/'.$image->hashName();
 //                $image->storeAs('public', $image_name);
-                $storageImage = Storage::putFile('public/developer', $request->file($image));
+                $image_name = Storage::putFile('public/developer', $request->file($image));
             }
         }
-        return str_replace('public/developer/', '', $storageImage);
+        return str_replace('public/developer/', '', $image_name);
 //        return $image_name;
     }
 

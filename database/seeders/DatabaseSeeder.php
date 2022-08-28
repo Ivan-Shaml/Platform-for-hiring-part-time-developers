@@ -27,6 +27,11 @@ class DatabaseSeeder extends Seeder
 //        $this->call(HireTableSeeder::class);
 //        Developer::factory(3)->hasHires(3)->create();
 //        Developer::factory()->has(Hire::factory())->create();
+
+        Developer::factory(1)->create([
+            'name' => 'John Doe'
+        ]);
+
         Developer::factory(5)->hasHires(5, function (array $attributes, Developer $developer) {
             return ['names' => $developer->name];
         })->create();
