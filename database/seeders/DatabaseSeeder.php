@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
 //            'email' => 'johndoe@gmial.com'
 //        ]);
 
-        Developer::factory(5)->hasHires(5, function (array $attributes, Developer $developer) {
+        Developer::factory(3)->hasHires(1, function (array $attributes, Developer $developer) {
             return ['names' => $developer->name];
         })->create();
     }
