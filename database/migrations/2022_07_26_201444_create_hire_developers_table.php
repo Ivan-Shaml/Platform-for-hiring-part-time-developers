@@ -14,12 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('hire_developers', function (Blueprint $table) {
-//            $table->bigIncrements('id');
             $table->id();
-//            $table->string('id', 36)->primary();
-//            $table->foreignId('developer_id')->constrained('developers')->cascadeOnDelete();
-//            $table->integer('developer_id')->unsigned();
-//            $table->foreign('developer_id')->references('id')->on('developers');
             $table->bigInteger('developer_id')->unsigned()->index(); // this is working
             $table->foreign('developer_id')->references('id')->on('developers')->onDelete('cascade');
             $table->text('names');

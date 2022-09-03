@@ -26,7 +26,6 @@ class iDeleteDeveloperTest extends TestCase
 
         $response = $this->call('DELETE', "/hire/delete/{$hired_developer->id}");
         $response->assertRedirect('/hire');
-//        $response->assertStatus(404);
     }
 
     public function test_delete_api_hired_developer() {

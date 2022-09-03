@@ -30,9 +30,11 @@ class HireApiController extends Controller
     public function create(HireRequest $request, Hire $hire)
     {
         $hire_devs_by_names = Developer::where('name', $request->names)->get();
+//        $hire_devs_by_names = Hire::with('developer')->get();
         $hire_dev = '';
         foreach($hire_devs_by_names as $dev) {
             $hire_dev = $hire->create([
+//                'developer_id' => $dev->developer->id,
                 'developer_id' => $dev->id,
                 'names' => request('names'),
                 'start_date' => request('start_date'),
