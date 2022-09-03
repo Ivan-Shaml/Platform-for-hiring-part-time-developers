@@ -9,7 +9,7 @@
 
 # About
 
-    This is a platform for creating developer profiles and hiring them for a certain peiod of time. The hire can by gorup or single hire. The profiles containg attributes like technology/language that the developer work on, years of experience, price peh hour billing, LinkedIn profile link, small description, etc.
+This is a platform for creating developer profiles and hiring them for a certain peiod of time. The hire can by gorup or single hire. The profiles containg attributes like technology/language that the developer work on, years of experience, price peh hour billing, LinkedIn profile link, small description, etc.
 
 ## Installation
 
@@ -22,8 +22,10 @@ Switch to the repo folder
     cd Platform-for-hiring-part-time-developers
 
 Update and install all the dependencies using composer
-composer update
-composer install
+
+    composer update
+
+    composer install
 
 Copy the example env file and make the required configuration changes in the .env file
 
@@ -99,3 +101,9 @@ Run the laravel development server
 The api can be accessed at
 
     http://localhost:8000/api
+
+# Performing Unit tests
+
+Unit tests were made for testing the functionalities of the application.
+
+    php artisan test
