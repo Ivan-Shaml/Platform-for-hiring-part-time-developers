@@ -25,18 +25,6 @@ class Hire extends Model
         'end_date',
     ];
 
-
-//    public function setNamesAttribute($value)
-//    {
-//        $this->attributes['names'] = json_encode($value);
-//    }
-//
-//    public function getNamesAttribute($value)
-//    {
-////        return $this->attributes['names'] = json_decode($value);
-//        return json_decode($value);
-//    }
-
     public function developer(){
         return $this->belongsTo(Developer::class);  // A Hire belongs to a Developer
     }

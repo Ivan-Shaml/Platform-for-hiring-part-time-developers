@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [DevelopersController::class, 'index'])->name('developers.show');
 
 
 //Route::get('/developers', function () {
@@ -36,7 +34,7 @@ Route::group(['namespace' => 'Developers'], function() {
     Route::get('/developers/delete/{id}', [DevelopersController::class, 'destroy'])->name('developers.destroy');
     Route::delete('/developers/delete/{id}', [DevelopersController::class, 'destroy'])->name('developers.destroy');
 
-    Route::get('/developers/profile/{id}', [DevelopersController::class, 'getDeveloper'])->name('hire.show');
+    Route::get('/developers/profile/{id}', [DevelopersController::class, 'developerProfile'])->name('hire.show');
 });
 
 
