@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Developers\DevelopersController;
 use App\Http\Controllers\Hire\HireController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,3 +50,5 @@ Route::group(['namespace' => 'Hire'], function() {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::view('/swagger', 'swaggerdocs');

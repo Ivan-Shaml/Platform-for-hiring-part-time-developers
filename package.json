@@ -14,5 +14,7 @@
         "sass": "^1.56.1",
         "vite": "^3.0.0"
     },
-    "dependencies": []
+    "dependencies": {
+        "swagger-ui": "^4.16.0"
+    }
 }
