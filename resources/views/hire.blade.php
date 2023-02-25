@@ -8,10 +8,14 @@
             @csrf
             <h4>Hire Available Developers</h4>
             Start Date: <label for="start_date">
-                <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}"/>
+                <input type="date" name="start_date" id="start_date"
+                       value="{{ is_null(old('start_date')) ? today()->format("Y-m-d") : old('start_date') }}"
+                       min="{{today()->format("Y-m-d")}}"/>
             </label>
             End Date: <label for="end_date">
-                <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}"/>
+                <input type="date" name="end_date" id="end_date"
+                       value="{{ is_null(old('end_date')) ? date("Y-m-d", strtotime("+ 1 day")) : old('end_date') }}"
+                       min="{{date("Y-m-d", strtotime("+ 1 day"))}}"/>
             </label>
             @if ($errors->has('start_date'))
                 <span class="text-danger">{{ $errors->first('start_date') }}</span>
@@ -62,7 +66,7 @@
                     <form action="{{ route('hire.destroy', $hired_developer->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
                     </form>
                 </td>
             </tr>

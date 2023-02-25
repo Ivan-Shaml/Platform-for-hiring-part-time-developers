@@ -21,22 +21,24 @@ class DeveloperService implements IDeveloperService
         $this->hireService = $hireService;
     }
 
-    public function getDeveloper()
+    public function getDevelopers(): \Illuminate\Database\Eloquent\Collection
     {
         return Developer::all();
     }
 
-    public function createDeveloper(DeveloperRequest $request) {
-        Developer::create(array_merge($request->validated(), [
+    public function createDeveloper(DeveloperRequest $request)
+    {
+        return Developer::create(array_merge($request->validated(), [
             'profile_picture' => self::handleUploadedImage($request, 'profile_picture')
         ]));
     }
 
-    public function updateDeveloper(DeveloperRequest $request, $id) {
+    public function updateDeveloper(DeveloperRequest $request, $id)
+    {
         $developer = Developer::find($id);
 
-        if($request->hasFile('profile_picture')){
-            $developer->update(array_merge($request->validated(), [ 'profile_picture' => self::handleUploadedImage($request, 'profile_picture') ]));
+        if ($request->hasFile('profile_picture')) {
+            $developer->update(array_merge($request->validated(), ['profile_picture' => self::handleUploadedImage($request, 'profile_picture')]));
         } else {
             $developer->update($request->except('profile_picture'));
         }
@@ -48,7 +50,7 @@ class DeveloperService implements IDeveloperService
     {
         $image_name = '';
         if (!is_null($image)) {
-            if($request->hasFile($image)){
+            if ($request->hasFile($image)) {
                 $image_name = Storage::putFile('public/developer', $request->file($image));
             }
         }
@@ -56,10 +58,20 @@ class DeveloperService implements IDeveloperService
     }
 
 
-    public function deleteDeveloper($id) {
-            $developers = Developer::find($id);
-            Storage::disk('public')->delete('developer/'.$developers->profile_picture);
-            $developers->delete();
+    public function deleteDeveloper($id): bool
+    {
+        $developer = Developer::find($id);
+
+        if (is_null($developer)) {
+            return false;
+        }
+
+        Storage::disk('public')->delete('developer/' . $developer->profile_picture);
+        return $developer->delete();
     }
 
+    public function getDeveloperById($id)
+    {
+        return Developer::find($id);
+    }
 }

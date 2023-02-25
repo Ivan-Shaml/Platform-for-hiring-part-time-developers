@@ -9,6 +9,7 @@
     <link href="{{ asset('/app.css') }}" rel="stylesheet">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://kit.fontawesome.com/083138e535.js" crossorigin="anonymous"></script>
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -24,15 +25,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{route('developers.show')}}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{route('hire.create')}}">Hire Developer(s)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{route('developers.create')}}">Create Developer</a>
-                </li>
                 @guest
                     @if (Route::has('login'))
                         <li class="nav-item">
@@ -46,8 +38,21 @@
                         </li>
                     @endif
                 @else
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{route('developers.show')}}"><i
+                                class="fa-solid fa-house"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{route('hire.create')}}"><i
+                                class="fa-solid fa-briefcase"></i> Hire Developer(s)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{route('developers.create')}}"><i
+                                class="fa-solid fa-circle-plus"></i> Create Developer</a>
+                    </li>
                     <li class="nav-item dropdown">
-                        <div id="navbarDropdown" class="nav-link active dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <div id="navbarDropdown" class="nav-link active dropdown-toggle" type="button"
+                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             Welcome, {{ Auth::user()->name }}
                         </div>
 
@@ -55,7 +60,7 @@
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                Logout
+                                <i class="fa-solid fa-door-open"></i> Logout
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

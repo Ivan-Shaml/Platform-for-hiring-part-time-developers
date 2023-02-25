@@ -28,7 +28,7 @@ class DevelopersController extends Controller
      */
     public function index(): View
     {
-        $developer = $this->developerService->getDeveloper();
+        $developer = $this->developerService->getDevelopers();
         return view('developers', compact('developer'));
     }
 

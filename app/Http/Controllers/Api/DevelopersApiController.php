@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DeveloperRequest;
 use App\Http\Resources\DeveloperResource;
-use App\Models\Developer;
 use App\Services\Contracts\IDeveloperService;
-use App\Services\DeveloperService;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class DevelopersApiController extends Controller
 {
@@ -30,7 +29,18 @@ class DevelopersApiController extends Controller
      */
     public function index()
     {
-        return DeveloperResource::collection($this->developerService->getDeveloper());
+        return DeveloperResource::collection($this->developerService->getDevelopers());
+    }
+
+    public function show(int $id)
+    {
+        $developer = $this->developerService->getDeveloperById($id);
+
+        if (is_null($developer)) {
+            return new Response('', ResponseAlias::HTTP_NOT_FOUND);
+        }
+
+        return new Response(json_encode($developer), ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -40,7 +50,7 @@ class DevelopersApiController extends Controller
      */
     public function create(DeveloperRequest $request)
     {
-        $this->developerService->createDeveloper($request->validated());
+        $this->developerService->createDeveloper($request);
 
         return response()->json([
             'status' => 'success',
@@ -52,12 +62,12 @@ class DevelopersApiController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(DeveloperRequest $request)
     {
-        $this->developerService->createDeveloper($request->validated());
+        $this->developerService->createDeveloper($request);
 
         return response()->json([
             'status' => 'success',
@@ -67,37 +77,14 @@ class DevelopersApiController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Developer  $developer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Developer $developer)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Developer  $developer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Developer $developer)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Developer  $developer
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Developer $developer
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(DeveloperRequest $request, $id)
     {
-//        $dev = $developer->update($request->validated());
         $this->developerService->updateDeveloper($request, $id);
 
         return response()->json([
@@ -107,19 +94,9 @@ class DevelopersApiController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Developer  $developer
-     * @return array
-     */
-    public function destroy(Developer $developer)
+    public function destroy(int $id)
     {
-        $success_delete = $developer->delete();
-
-        return [
-            'success' => $success_delete,
-            'developer' => $success_delete
-        ];
+        $result = $this->developerService->deleteDeveloper($id);
+        return ($result ? new Response('', ResponseAlias::HTTP_NO_CONTENT) : new Response('', ResponseAlias::HTTP_NOT_FOUND));
     }
 }

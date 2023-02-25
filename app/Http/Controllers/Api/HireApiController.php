@@ -8,8 +8,9 @@ use App\Http\Resources\HireResource;
 use App\Models\Developer;
 use App\Models\Hire;
 use App\Services\Contracts\IHireService;
-use App\Services\HireService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class HireApiController extends Controller
 {
@@ -45,7 +46,7 @@ class HireApiController extends Controller
         $hire_devs_by_names = Developer::where('name', $request->names)->get();
 //        $hire_devs_by_names = Hire::with('developer')->get();
         $hire_dev = '';
-        foreach($hire_devs_by_names as $dev) {
+        foreach ($hire_devs_by_names as $dev) {
             $hire_dev = $hire->create([
 //                'developer_id' => $dev->developer->id,
                 'developer_id' => $dev->id,
@@ -54,11 +55,8 @@ class HireApiController extends Controller
                 'end_date' => request('end_date'),
             ]);
         }
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Developer for Hire created successfully',
-            'hired_developers' => $hire_dev,
-        ]);
+
+        return response()->json($hire_dev, ResponseAlias::HTTP_CREATED);
     }
 
 //    /**
@@ -109,16 +107,13 @@ class HireApiController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Hire  $hire
-     * @return array
+     * @param int $id
+     * @return Response
      */
-    public function destroy(Hire $hire)
+    public function destroy(int $id)
     {
-        $success_delete = $hire->delete();
+        $success_delete = $this->hireService->deleteHire($id);
 
-        return [
-            'success' => $success_delete,
-            'developer' => $success_delete
-        ];
+        return ($success_delete ? new Response('', ResponseAlias::HTTP_NO_CONTENT) : new Response('', ResponseAlias::HTTP_NOT_FOUND));
     }
 }

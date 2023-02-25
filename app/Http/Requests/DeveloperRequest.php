@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class DeveloperRequest extends FormRequest
 {
@@ -23,8 +26,7 @@ class DeveloperRequest extends FormRequest
      */
     public function rules()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
             case 'DELETE':
             {
@@ -51,7 +53,7 @@ class DeveloperRequest extends FormRequest
             {
                 return [
                     'name' => 'nullable|string|min:5|max:255',
-                    'email' => 'nullable|unique:developers,email,'.$this->id,
+                    'email' => 'nullable|unique:developers,email,' . $this->id,
                     'phone' => 'nullable|numeric|digits:10',
                     'location' => 'nullable',
                     'profile_picture' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
@@ -63,7 +65,20 @@ class DeveloperRequest extends FormRequest
                     'linkedin_profile_link' => 'nullable',
                 ];
             }
-            default:break;
+            default:
+                break;
+        }
+    }
+
+    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        if (strcasecmp($this->getContentType(), "json") == 0) {
+            throw new HttpResponseException(new Response([
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], ResponseAlias::HTTP_BAD_REQUEST));
+        } else {
+            parent::failedValidation($validator);
         }
     }
 

@@ -23,17 +23,20 @@
                 <td>{{ $dev->name }}</td>
                 <td>{{ $dev->email }}</td>
                 <td>
-                    <img src="{{empty($dev->profile_picture) ? asset('storage/pictures/default.png') : asset("storage/developer/$dev->profile_picture")}}"
-                         style="height: 100px; width: 150px;"  alt="Developer profile picture"/></td>
+                    <img
+                        src="{{empty($dev->profile_picture) ? asset('storage/pictures/default.png') : asset("storage/developer/$dev->profile_picture")}}"
+                        style="height: 100px; width: 150px;" alt="Developer profile picture"/></td>
                 <td>{{ $dev->price_per_hour }}</td>
                 <td>{{ $dev->technology }}</td>
-                <td><a href="developers/profile/{{ $dev->id }}">Profile</a></td>
-                <td><a href="developers/edit/{{ $dev->id }}">Edit</a></td>
+                <td><a href="developers/profile/{{ $dev->id }}" class="btn btn-info"><i
+                            class="fa-solid fa-id-badge"></i>Profile</a></td>
+                <td><a href="developers/edit/{{ $dev->id }}" class="btn btn-warning"><i class="fa-solid fa-pen"></i>Edit</a>
+                </td>
                 <td>
                     <form action="{{ route('developers.destroy', $dev->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i>Delete</button>
                     </form>
                 </td>
             </tr>
