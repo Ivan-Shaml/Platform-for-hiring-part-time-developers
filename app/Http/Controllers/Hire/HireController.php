@@ -11,9 +11,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use MongoDB\Driver\Exception\UnexpectedValueException;
 
 class HireController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
     /**
      * Display a listing of the hired developer resources.
      *
@@ -21,6 +28,7 @@ class HireController extends Controller
      */
     public function index()
     {
+
         return view('hire');
     }
 
@@ -47,8 +55,16 @@ class HireController extends Controller
      */
     public function store(HireRequest $request)
     {
-        HireService::storeHire($request);
-        return redirect('/hire')->with("sdasdsa");
+        $request->validated();
+        try{
+            HireService::storeHire($request);
+        }
+        catch (\Exception $exception)
+        {
+            return redirect('/hire')->withErrors(array('invalid_date'=>$exception->getMessage()));
+        }
+
+        return redirect('/hire');
     }
 
     /**

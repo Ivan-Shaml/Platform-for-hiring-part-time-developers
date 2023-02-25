@@ -33,9 +33,9 @@ class HireRequest extends FormRequest
             case 'POST':
             {
                 return [
-                    'names' => 'nullable',
-                    'start_date' => 'nullable|date',
-                    'end_date' => 'nullable|date'
+                    'ids' => 'required',
+                    'start_date' => 'required|date',
+                    'end_date' => 'required|date'
                 ];
             }
             default:break;
@@ -51,7 +51,7 @@ class HireRequest extends FormRequest
     public function messages()
     {
         return [
-            'names.required' => 'Choosing at least one developer is required!',
+            'ids.required' => 'Choosing at least one developer is required!',
             'start_date.required' => 'Start Date is required!',
             'end_date.required' => 'End Date is required!'
         ];

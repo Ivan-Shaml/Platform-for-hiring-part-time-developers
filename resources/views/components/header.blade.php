@@ -7,13 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>About</title>
     <link href="{{ asset('/app.css') }}" rel="stylesheet">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size: 20px;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/developers">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Babel_Logo.svg/1200px-Babel_Logo.svg.png"
-                 width="150px" alt="">
+        <a class="navbar-brand" href="{{route('developers.show')}}">
+            <img src="{{asset('images/logo.png')}}" width="150px" alt="">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-toggle="collapse"
                 data-target="#navbarToggleExternalContent" data-bs-target="#navbarNav" aria-controls="navbarNav"
@@ -23,16 +25,46 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/developers">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{{route('developers.show')}}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/hire">Hire Developer(s)</a>
+                    <a class="nav-link active" aria-current="page" href="{{route('hire.create')}}">Hire Developer(s)</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/developers/create">Create Developer</a>
+                    <a class="nav-link active" href="{{route('developers.create')}}">Create Developer</a>
                 </li>
+                @guest
+                    @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                    @endif
+
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                    @endif
+                @else
+                    <li class="nav-item dropdown">
+                        <div id="navbarDropdown" class="nav-link active dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            Welcome, {{ Auth::user()->name }}
+                        </div>
+
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @endguest
             </ul>
-        </div>
     </div>
 </nav><br>
 {{--@extends('components.nav')--}}

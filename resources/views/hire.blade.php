@@ -18,18 +18,21 @@
             @if ($errors->has('end_date'))
                 <span class="text-danger">{{ $errors->first('end_date') }}</span>
             @endif
+            @if ($errors->has('invalid_date'))
+                <span class="text-danger">{{ $errors->first('invalid_date') }}</span>
+            @endif
             <div class="row">
                 <!--Show all existing developers from db in a select field-->
-                <select name="names[]" class="form-control" multiple="multiple"
-                        aria-label="multiple select example">
+                <select name="ids[]" class="form-control" multiple="multiple"
+                        aria-label="multiple select">
                     @foreach ($list_developers_for_hire as $row)
-                        <option value="{{ $row->name }}">{{ $row->name }}</option>
+                        <option value="{{ $row->id }}">{{ $row->name }}</option>
                     @endforeach
                     {{--                @extends('components.hired_dev')--}}
                     {{--            </select>--}}
-                    <input class="form-group col-12" type="submit" name="submit" value="Submit">
-                    @if ($errors->has('names'))
-                        <span class="text-danger">{{ $errors->first('names') }}</span>
+                    <input class="form-group col-12" type="submit" name="submit" value="Submit" {{count($list_developers_for_hire) == 0 ? "disabled" : ""}}>
+                    @if ($errors->has('ids'))
+                        <span class="text-danger">{{ $errors->first('ids') }}</span>
                 @endif
             </div>
         </form>

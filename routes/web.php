@@ -45,3 +45,7 @@ Route::group(['namespace' => 'Hire'], function() {
     Route::get('/hire/delete/{id}', [HireController::class, 'destroy'])->name('hire.destroy');
     Route::delete('/hire/delete/{id}', [HireController::class, 'destroy'])->name('hire.destroy');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -12,6 +12,11 @@ use Illuminate\Http\RedirectResponse;
 
 class DevelopersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of al developers.
      *
