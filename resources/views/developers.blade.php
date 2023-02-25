@@ -1,5 +1,5 @@
 @extends('layout')
-
+@section('title', 'All Developers')
 @section('content')
     @extends('components.header')
     <table class='table center col-10 mt-5 mb-5'>
@@ -23,8 +23,8 @@
                 <td>{{ $dev->name }}</td>
                 <td>{{ $dev->email }}</td>
                 <td>
-                    <img src="{{ asset('storage/developer/'.$dev->profile_picture) }}"
-                         style="height: 100px; width: 150px;"></td>
+                    <img src="{{empty($dev->profile_picture) ? asset('storage/pictures/default.png') : asset("storage/developer/$dev->profile_picture")}}"
+                         style="height: 100px; width: 150px;"  alt="Developer profile picture"/></td>
                 <td>{{ $dev->price_per_hour }}</td>
                 <td>{{ $dev->technology }}</td>
                 <td><a href="developers/profile/{{ $dev->id }}">Profile</a></td>

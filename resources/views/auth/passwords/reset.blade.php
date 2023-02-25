@@ -1,5 +1,5 @@
 @extends('layout')
-
+@section('title', 'Reset Password')
 @section('content')
     @extends('components.header')
 <div class="container">

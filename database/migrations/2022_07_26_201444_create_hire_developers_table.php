@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('names');
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
+            $table->bigInteger('user_hired_id')->unsigned()->index();
+            $table->foreign('user_hired_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -1,4 +1,5 @@
 @extends('layout')
+@section('title', 'Hire Developer(s)')
 @section('content')
     @extends('components.header')
 

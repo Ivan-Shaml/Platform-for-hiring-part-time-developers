@@ -1,6 +1,7 @@
 @extends('layout')
+@section('title', 'Edit Developer')
 @section('content')
-    @extends('components.header')
+@extends('components.header')
 <br><h3 class="text-center">Edit data:</h3><br>
 <form class="col-6 container" name="form" method="POST" enctype="multipart/form-data" action="{{ route('developers.update', $developers->id ) }}" >
     <br>
@@ -52,20 +53,13 @@
         <div class="form-group col-12">
             <label for="inputState">Edit Technology:</label>
             <select name="technology" class="form-control">
-                <!--                --><?php
-                foreach (["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"] as $data) {
-                if ($data == $developers->technology) {
-                ?>
-                <option value="<?php echo $data ?>" selected><?php echo $data ?></option>
-                <?php
-                }else {
-                ?>
-                <option value="<?php echo $data ?>"><?php echo $data ?></option>
-                <?php
-                }
-                }
-
-                //        $row->technology //$developer->selection_data_fetch(["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"], $row, "technology"); ?>
+                @foreach (["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"] as $data)
+                    @if ($data == $developers->technology)
+                        <option value="{{$data}}" selected>{{$data}}</option>
+                    @else
+                        <option value="{{$data}}">{{$data}}</option>
+                    @endif
+                @endforeach
             </select>
         </div>
         <div class="form-group col-12">
@@ -81,20 +75,13 @@
         <div class="form-group col-12">
             <label for="inputState">Edit selected Native Language:</label>
             <select id="inputState" name="native_language" class="form-control">
-                <!--                --><?php
-                foreach (["English", "Serbian", "Bulgarian"] as $data) {
-                if ($data == $developers->native_language) {
-                ?>
-                <option value="<?php echo $data ?>" selected><?php echo $data ?></option>
-                <?php
-                }else {
-                ?>
-                <option value="<?php echo $data ?>"><?php echo $data ?></option>
-                <?php
-                }
-                }
-
-                //        $row->technology //$developer->selection_data_fetch(["JavaScript", "Java", ".NET", "Flutter", "Python", "PHP"], $row, "technology"); ?>
+               @foreach (["English", "Serbian", "Bulgarian"] as $data)
+                    @if ($data == $developers->native_language)
+                        <option value="{{$data}}" selected>{{$data}}</option>
+                    @else
+                        <option value="{{$data}}">{{$data}}</option>
+                    @endif
+                @endforeach
             </select>
         </div>
         <div class="form-group col-12">

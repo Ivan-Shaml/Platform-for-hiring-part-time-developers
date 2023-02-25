@@ -1,4 +1,5 @@
 @extends('layout')
+@section('title', 'Create Developer')
 @section('content')
     @extends('components.header')
     <form class="col-6 container" action="{{ route('developers.store') }}" method="POST" enctype="multipart/form-data">

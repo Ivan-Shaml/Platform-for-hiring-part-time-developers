@@ -8,6 +8,7 @@ use App\Models\Hire;
 use Exception;
 use http\Exception\UnexpectedValueException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HireService{
 
@@ -60,7 +61,7 @@ class HireService{
             foreach ($collected_developers as $single_collected_developer) {
                 foreach($hire_devs_by_id as $dev) {
                     Hire::insert(
-                        ["names" => $dev->name, "developer_id" => $dev->id, "start_date" => $request->start_date, "end_date" => $request->end_date]
+                        ["names" => $dev->name, "developer_id" => $dev->id, "start_date" => $request->start_date, "end_date" => $request->end_date, 'user_hired_id'=> Auth::user()->id]
                     );
                 }
             }
