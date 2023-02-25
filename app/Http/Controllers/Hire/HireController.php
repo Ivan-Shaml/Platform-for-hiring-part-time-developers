@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\HireRequest;
 use App\Models\Developer;
 use App\Models\Hire;
+use App\Services\Contracts\IHireService;
 use App\Services\HireService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +16,10 @@ use MongoDB\Driver\Exception\UnexpectedValueException;
 
 class HireController extends Controller
 {
-    public function __construct()
+    private IHireService $hireService;
+    public function __construct(IHireService $hireService)
     {
+        $this->hireService = $hireService;
         $this->middleware('auth');
     }
 
@@ -57,7 +60,7 @@ class HireController extends Controller
     {
         $request->validated();
         try{
-            HireService::storeHire($request);
+            $this->hireService->storeHire($request);
         }
         catch (\Exception $exception)
         {
@@ -109,7 +112,7 @@ class HireController extends Controller
      */
     public function destroy($id)
     {
-        HireService::deleteHire($id);
+        $this->hireService->deleteHire($id);
         return redirect('/hire')->with('success', 'Dev Data is successfully deleted');
     }
 }

@@ -6,11 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DeveloperRequest;
 use App\Http\Resources\DeveloperResource;
 use App\Models\Developer;
+use App\Services\Contracts\IDeveloperService;
 use App\Services\DeveloperService;
 use Illuminate\Http\Request;
 
 class DevelopersApiController extends Controller
 {
+    private IDeveloperService $developerService;
+
+    /**
+     * @param IDeveloperService $developerService
+     */
+    public function __construct(IDeveloperService $developerService)
+    {
+        $this->developerService = $developerService;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +30,7 @@ class DevelopersApiController extends Controller
      */
     public function index()
     {
-        return DeveloperResource::collection(DeveloperService::getDeveloper());
+        return DeveloperResource::collection($this->developerService->getDeveloper());
     }
 
     /**
@@ -28,7 +40,7 @@ class DevelopersApiController extends Controller
      */
     public function create(DeveloperRequest $request)
     {
-        DeveloperService::createDeveloper($request->validated());
+        $this->developerService->createDeveloper($request->validated());
 
         return response()->json([
             'status' => 'success',
@@ -45,7 +57,7 @@ class DevelopersApiController extends Controller
      */
     public function store(DeveloperRequest $request)
     {
-        DeveloperService::createDeveloper($request->validated());
+        $this->developerService->createDeveloper($request->validated());
 
         return response()->json([
             'status' => 'success',
@@ -86,7 +98,7 @@ class DevelopersApiController extends Controller
     public function update(DeveloperRequest $request, $id)
     {
 //        $dev = $developer->update($request->validated());
-        DeveloperService::updateDeveloper($request, $id);
+        $this->developerService->updateDeveloper($request, $id);
 
         return response()->json([
             'status' => 'success',

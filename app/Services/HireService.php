@@ -5,29 +5,22 @@ use App\Http\Requests\DeveloperRequest;
 use App\Http\Requests\HireRequest;
 use App\Models\Developer;
 use App\Models\Hire;
+use App\Services\Contracts\IHireService;
 use Exception;
 use http\Exception\UnexpectedValueException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class HireService{
+class HireService implements IHireService
+{
 
 
-    /**
-     * Return all exising developers.
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public static function getHire(): \Illuminate\Database\Eloquent\Collection
+    public function getHire(): \Illuminate\Database\Eloquent\Collection
     {
         return Hire::all();
     }
 
-    /**
-     * Hire existing developer(s) from a list without dates overlap
-     * @param HireRequest $request - Obtain the client HTTP request.
-//     * @return void
-     */
-    public static function storeHire(HireRequest $request) {
+    public function storeHire(HireRequest $request) {
         // Select all from developer where name = names from hire_developers
         $hire_devs_by_id = Developer::where('id', $request->ids)->get();
         $selected_developers_to_hire = $request->ids;
@@ -68,22 +61,12 @@ class HireService{
         }
     }
 
-    /**
-     * @param $id - Accessing id route for determining which developer was updated.
-     * @return void
-     */
-    public static function deleteHire($id) {
+    public function deleteHire($id) {
         $delete_dev = Hire::findOrFail($id);
         $delete_dev->delete();
     }
 
-    /**
-     * When an existing developer which is hired gets edited, the changes take place also in the hire_developers table records.
-     * @param DeveloperRequest $request - Obtain an instance by injecting custom request class.
-     * @param $id - Accessing id route for determining which developer was updated.
-     * @return void
-     */
-    public static function updateHires(DeveloperRequest $request, $id) {
+    public function updateHires(DeveloperRequest $request, $id) {
         $hire = Hire::where('developer_id', $id)->get();
         foreach($hire as $single_hire) {
             $single_hire->names = $request->get('name', 'No Data');

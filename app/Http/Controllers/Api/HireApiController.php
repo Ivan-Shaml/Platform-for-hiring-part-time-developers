@@ -7,11 +7,24 @@ use App\Http\Requests\HireRequest;
 use App\Http\Resources\HireResource;
 use App\Models\Developer;
 use App\Models\Hire;
+use App\Services\Contracts\IHireService;
 use App\Services\HireService;
 use Illuminate\Http\Request;
 
 class HireApiController extends Controller
 {
+
+    private IHireService $hireService;
+
+    /**
+     * @param IHireService $hireService
+     */
+    public function __construct(IHireService $hireService)
+    {
+        $this->hireService = $hireService;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +32,7 @@ class HireApiController extends Controller
      */
     public function index()
     {
-        return HireResource::collection(HireService::getHire());
+        return HireResource::collection($this->hireService->getHire());
     }
 
     /**
