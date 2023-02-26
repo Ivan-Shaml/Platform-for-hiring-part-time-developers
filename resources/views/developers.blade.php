@@ -28,9 +28,10 @@
                         style="height: 100px; width: 150px;" alt="Developer profile picture"/></td>
                 <td>{{ $dev->price_per_hour }}</td>
                 <td>{{ $dev->technology }}</td>
-                <td><a href="developers/profile/{{ $dev->id }}" class="btn btn-info"><i
+                <td><a href="{{route('hire.show', $dev->id)}}" class="btn btn-info"><i
                             class="fa-solid fa-id-badge"></i>Profile</a></td>
-                <td><a href="developers/edit/{{ $dev->id }}" class="btn btn-warning"><i class="fa-solid fa-pen"></i>Edit</a>
+                <td><a href="{{ route('developers.edit', $dev->id)}}" class="btn btn-warning"><i
+                            class="fa-solid fa-pen"></i>Edit</a>
                 </td>
                 <td>
                     <form action="{{ route('developers.destroy', $dev->id) }}" method="POST">

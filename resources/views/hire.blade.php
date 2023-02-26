@@ -35,7 +35,8 @@
                     @endforeach
                     {{--                @extends('components.hired_dev')--}}
                     {{--            </select>--}}
-                    <input class="form-group col-12" type="submit" name="submit" value="Submit" {{count($list_developers_for_hire) == 0 ? "disabled" : ""}}>
+                    <input class="form-group col-12" type="submit" name="submit"
+                           value="Submit" {{count($list_developers_for_hire) == 0 ? "disabled" : ""}}>
                     @if ($errors->has('ids'))
                         <span class="text-danger">{{ $errors->first('ids') }}</span>
                 @endif
@@ -58,8 +59,9 @@
             <tbody>
             <tr>
                 <td> {{ e($hired_developer->names) }} </td>
-                <td><img src="{{ asset('storage/developer/'.$hired_developer->profile_picture) }}"
-                         style="height: 100px; width: 150px;" alt="Profile image of the hired developer"></td>
+                <td><img
+                        src="{{empty($hired_developer->profile_picture) ? asset('storage/pictures/default.png') : asset("storage/developer/$hired_developer->profile_picture")}}"
+                        style="height: 100px; width: 150px;" alt="Profile image of the hired developer"></td>
                 <td> {{ $hired_developer->start_date }} </td>
                 <td> {{ $hired_developer->end_date }} </td>
                 <td>
@@ -75,4 +77,18 @@
 
     </table>
 
+    <script>
+        function addDays(date, days) {
+            let result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        document.getElementById("start_date").addEventListener("change", function () {
+            let endDateSelector = document.getElementById("end_date");
+            let selectedDate = this.value === "" ? new Date() : new Date(this.value);
+            let minDate = addDays(selectedDate, 1).toISOString().split("T")[0];
+            endDateSelector.setAttribute("min", minDate)
+        });
+    </script>
 @endsection
