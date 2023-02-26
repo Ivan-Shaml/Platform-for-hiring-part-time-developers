@@ -87,8 +87,9 @@
         document.getElementById("start_date").addEventListener("change", function () {
             let endDateSelector = document.getElementById("end_date");
             let selectedDate = this.value === "" ? new Date() : new Date(this.value);
-            let minDate = addDays(selectedDate, 1).toISOString().split("T")[0];
-            endDateSelector.setAttribute("min", minDate)
+            let minDate = addDays(selectedDate, 1);
+            endDateSelector.setAttribute("min", minDate.toISOString().split("T")[0]);
+            endDateSelector.valueAsDate = selectedDate >= endDateSelector.valueAsDate ? minDate : endDateSelector.valueAsDate;
         });
     </script>
 @endsection
