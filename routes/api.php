@@ -26,9 +26,9 @@ Route::group(['namespace' => 'Developers'], function() {
 
     Route::get('/developer/{id}', [DevelopersApiController::class, 'show'])->name('api.v1.developer.show');
 
-    Route::post('/developer', [DevelopersApiController::class, 'create']);
+    Route::post('/developer', [DevelopersApiController::class, 'store']);
 
-    Route::put('/developer', [DevelopersApiController::class, 'update']);
+    Route::put('/developer/{id}', [DevelopersApiController::class, 'update']);
 
     Route::delete('/developer/{id}', [DevelopersApiController::class, 'destroy']);
 });

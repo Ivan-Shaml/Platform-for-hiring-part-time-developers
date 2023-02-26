@@ -3,9 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class HireRequest extends FormRequest
 {
@@ -43,18 +40,6 @@ class HireRequest extends FormRequest
             }
             default:
                 break;
-        }
-    }
-
-    public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
-    {
-        if (strcasecmp($this->getContentType(), "json") == 0) {
-            throw new HttpResponseException(new Response([
-                'message' => 'Validation errors',
-                'errors' => $validator->errors()
-            ], ResponseAlias::HTTP_BAD_REQUEST));
-        } else {
-            parent::failedValidation($validator);
         }
     }
 

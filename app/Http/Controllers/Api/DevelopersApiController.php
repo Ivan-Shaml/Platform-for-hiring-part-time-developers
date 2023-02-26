@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DeveloperRequest;
+use App\Http\Requests\Api\DeveloperApiRequest;
 use App\Http\Resources\DeveloperResource;
 use App\Services\Contracts\IDeveloperService;
 use Illuminate\Http\Response;
@@ -40,40 +40,20 @@ class DevelopersApiController extends Controller
             return new Response('', ResponseAlias::HTTP_NOT_FOUND);
         }
 
-        return new Response(json_encode($developer), ResponseAlias::HTTP_OK);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function create(DeveloperRequest $request)
-    {
-        $this->developerService->createDeveloper($request);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Developer created successfully',
-            'developer' => $request->validated(),
-        ]);
+        return new Response(json_encode($developer), ResponseAlias::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param DeveloperApiRequest $request
+     * @return Response
      */
-    public function store(DeveloperRequest $request)
+    public function store(DeveloperApiRequest $request)
     {
-        $this->developerService->createDeveloper($request);
+        $developer = $this->developerService->createDeveloper($request);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Developer created successfully',
-            'developer' => $request->validated(),
-        ]);
+        return new Response('', ResponseAlias::HTTP_CREATED, ["Location:" => route('api.v1.developer.show', $developer->id)]);
     }
 
     /**
@@ -83,7 +63,7 @@ class DevelopersApiController extends Controller
      * @param \App\Models\Developer $developer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(DeveloperRequest $request, $id)
+    public function update(DeveloperApiRequest $request, $id)
     {
         $this->developerService->updateDeveloper($request, $id);
 

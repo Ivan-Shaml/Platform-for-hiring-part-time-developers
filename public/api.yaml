@@ -8,24 +8,215 @@ servers:
   - url: http://localhost:8000/api/v1
     description: local server
 
-components:
-    securitySchemes:
-      basicAuth:
-        type: http
-        scheme: basic
 security:
     - basicAuth: [ ]
 
 paths:
-  /developers:
+  /developer:
     get:
-      summary: Returns a list of all.
+      tags:
+        - Developer
+      summary: Returns a list of all developers.
       responses:
         '200':
-          description: A JSON array of user names
+          description: A JSON array of developers
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: '#/components/schemas/Developer'
+    post:
+      tags:
+        - Developer
+      summary: Create a new developer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeveloperUpdate'
+            encoding:
+              profile_picture:
+                contentType: image/jpeg, image/png, image/svg, image/gif, image/jpg
+      responses:
+        '201':
+          description: Developer created successfully
+        '400':
+          description: Bad Request Body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /developer/{id}:
+    put:
+      tags:
+        - Developer
+      summary: Update a developer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeveloperUpdate'
+            encoding:
+              profile_picture:
+                contentType: image/jpeg, image/png, image/svg, image/gif, image/jpg
+      responses:
+        '201':
+          description: Developer update successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Developer'
+        '400':
+          description: Bad Request Body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    delete:
+      tags:
+        - Developer
+      summary: Deletes a developer
+      responses:
+        '404':
+          description: when developer with the specified id doesn't exist
+        '201':
+          description: when deletion is successful
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Id of the developer to delete
+    get:
+      tags:
+        - Developer
+      summary: Gets a developer by id
+      responses:
+        '404':
+          description: when developer with the specified id doesn't exist
+        '200':
+          description: when the developer is found in the db and returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Developer'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Id of the developer to get
+
+
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Developer:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 255
+        email:
+          type: string
+        phone:
+          type: integer
+          minLength: 10
+          maxLength: 10
+        location:
+          type: string
+        profile_picture:
+          type: string
+        price_per_hour:
+          type: integer
+          minLength: 1
+          maxLength: 100
+        technology:
+          type: string
+        description:
+          type: string
+        years_of_experience:
+          type: integer
+        native_language:
+          type: string
+        linkedin_profile_link:
+          type: string
+      required:
+        - name
+        - email
+    DeveloperUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 5
+          maxLength: 255
+        email:
+          type: string
+        phone:
+          type: integer
+          minLength: 10
+          maxLength: 10
+        location:
+          type: string
+        price_per_hour:
+          type: integer
+          minLength: 1
+          maxLength: 100
+        technology:
+          type: string
+        description:
+          type: string
+        years_of_experience:
+          type: integer
+        native_language:
+          type: string
+        linkedin_profile_link:
+          type: string
+        profile_picture:
+          type: string
+          format: binary
+      required:
+        - name
+        - email
+
+    HireRequest:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+      required:
+        - ids
+        - start_date
+        - end_date
+
+    ErrorDto:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          properties:
+            validation_errors_for_field:
+              type: array
+              items:
+                type: string
+

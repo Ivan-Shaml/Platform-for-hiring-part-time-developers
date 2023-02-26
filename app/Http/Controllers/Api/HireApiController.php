@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\HireRequest;
+use App\Http\Requests\Api\HireApiRequest;
 use App\Http\Resources\HireResource;
 use App\Models\Developer;
 use App\Models\Hire;
@@ -41,7 +41,7 @@ class HireApiController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(HireRequest $request, Hire $hire)
+    public function create(HireApiRequest $request, Hire $hire)
     {
         $hire_devs_by_names = Developer::where('name', $request->names)->get();
 //        $hire_devs_by_names = Hire::with('developer')->get();
