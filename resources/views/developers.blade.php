@@ -24,7 +24,7 @@
                 <td>{{ $dev->email }}</td>
                 <td>
                     <img
-                        src="{{empty($dev->profile_picture) ? asset('storage/pictures/default.png') : asset("storage/developer/$dev->profile_picture")}}"
+                        src="{{empty($dev->profile_picture) ? asset('images/default.png') : asset("storage/developer/$dev->profile_picture")}}"
                         style="height: 100px; width: 150px;" alt="Developer profile picture"/></td>
                 <td>{{ $dev->price_per_hour }}</td>
                 <td>{{ $dev->technology }}</td>

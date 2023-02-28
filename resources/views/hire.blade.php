@@ -23,8 +23,8 @@
             @if ($errors->has('end_date'))
                 <span class="text-danger">{{ $errors->first('end_date') }}</span>
             @endif
-            @if ($errors->has('invalid_date'))
-                <span class="text-danger">{{ $errors->first('invalid_date') }}</span>
+            @if ($errors->has('hire_error'))
+                <span class="text-danger">{{ $errors->first('hire_error') }}</span>
             @endif
             <div class="row">
                 <!--Show all existing developers from db in a select field-->
@@ -60,7 +60,7 @@
             <tr>
                 <td> {{ e($hired_developer->names) }} </td>
                 <td><img
-                        src="{{empty($hired_developer->profile_picture) ? asset('storage/pictures/default.png') : asset("storage/developer/$hired_developer->profile_picture")}}"
+                        src="{{empty($hired_developer->profile_picture) ? asset('images/default.png') : asset("storage/developer/$hired_developer->profile_picture")}}"
                         style="height: 100px; width: 150px;" alt="Profile image of the hired developer"></td>
                 <td> {{ $hired_developer->start_date }} </td>
                 <td> {{ $hired_developer->end_date }} </td>
