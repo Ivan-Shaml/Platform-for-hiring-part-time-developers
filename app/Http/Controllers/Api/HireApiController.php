@@ -51,7 +51,7 @@ class HireApiController extends Controller
             return response()->json([
                 'message' => 'Validation errors',
                 'errors' => $ex->errors()
-            ], ResponseAlias::HTTP_CONFLICT);
+            ], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 

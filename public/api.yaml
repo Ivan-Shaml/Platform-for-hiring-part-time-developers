@@ -156,6 +156,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
         '401':
           description: Unauthorized.
+        '422':
+          description: Hiring business logic error has occurred.
   /hire/{id}:
     delete:
       tags:
