@@ -10,12 +10,7 @@ use Tests\TestCase;
 class CreateDeveloperTest extends TestCase
 {
     use RefreshDatabase;
-
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
+    
     private $developer;
     private $user;
 
@@ -62,5 +57,22 @@ class CreateDeveloperTest extends TestCase
         $response = $this->actingAs($this->user)->post('/developers/create_dev', array([]));
         $response->assertSessionHasErrors();
         $response->assertStatus(302);
+    }
+
+    public function test_delete_developer_success_when_valid_id_provided()
+    {
+        $developer = Developer::factory()->create();
+        $response = $this->actingAs($this->user)->delete("/developers/delete/$developer->id");
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/developers');
+    }
+
+    public function test_delete_developer_fails_when_invalid_id_provided()
+    {
+        $developer = Developer::factory()->make();
+        $response = $this->actingAs($this->user)->delete("/developers/delete/$developer->id");
+
+        $response->assertStatus(404);
     }
 }

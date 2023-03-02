@@ -75,4 +75,25 @@ class HireDeveloperTest extends TestCase
         $response->assertStatus(302);
         $response->assertSessionHasErrors();
     }
+
+    public function test_delete_hire_success_when_valid_id_provided()
+    {
+        Developer::factory(2)->create();
+        $hire = Hire::factory()->create(['user_hired_id' => $this->user->id]);
+
+        $response = $this->actingAs($this->user)->delete("/hire/delete/$hire->id");
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/hire');
+    }
+
+    public function test_delete_hire_fails_when_invalid_id_provided()
+    {
+        Developer::factory(2)->create();
+        $hire = Hire::factory()->make(['user_hired_id' => $this->user->id]);
+
+        $response = $this->actingAs($this->user)->delete("/hire/delete/$hire->id");
+
+        $response->assertStatus(404);
+    }
 }
