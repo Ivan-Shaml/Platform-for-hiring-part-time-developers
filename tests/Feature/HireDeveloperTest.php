@@ -76,6 +76,27 @@ class HireDeveloperTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
+    public function test_hire_developer_already_hired_for_period_overlap()
+    {
+        $response = $this->actingAs($this->user)->post('/hire', $this->validHire->toArray());
+        $response->assertStatus(302);
+        $response->assertSessionHasNoErrors();
+        $this->assertModelExists($this->validHire);
+
+        $invalid_hire_overlap = Hire::factory()->make(
+            [
+                'id' => 2,
+                'ids' => [1],
+                'start_date' => strtotime('+1 Day', today()->getTimestamp()),
+                'end_date' => strtotime('+3 Days', today()->getTimestamp())
+            ]
+        );
+
+        $response = $this->actingAs($this->user)->post('/hire', $invalid_hire_overlap->toArray());
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+    }
+
     public function test_delete_hire_success_when_valid_id_provided()
     {
         Developer::factory(2)->create();
