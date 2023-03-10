@@ -22,46 +22,61 @@ class HireService implements IHireService
     public function storeHire(HireRequest $request)
     {
         // Select all from developer where name = names from hire_developers
-        $hired_devs_by_id = [];
-        foreach ($request->ids as $id) {
-            $hired_devs_by_id[] = $hired_dev = Developer::find($id);
-                $hired_dev ?? throw ValidationException::withMessages(['hire_error' => "Developer with id: $id not found."]);
-        }
+        $hire_devs_by_names = Developer::whereIn('name', $request->names)->get();
 
-        $selected_developers_to_hire = $request->ids;
-        $now = date("Y-m-d");
+        $selected_developers_to_hire = $request->names;
+        $now = date("Y-m-d H:i:s");
+
         // Loop every selected developer for hiring and store them in an array by "names"
-        foreach ($hired_devs_by_id as $single_developer) {
-            // For every selected developer: Select all from hire_developers where names = 'selected developer' where start_date and end_date do not overlap
-            $select_hired_developers_by_id =
-                Hire::select('*')
-                    ->where('developer_id', '=', $single_developer->id)
-                    ->where(function ($query) use ($request) {
-//                        $query->whereBetween('start_date', [$request->start_date, $request->end_date])->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
-                        $query->whereDate('start_date', '<=', $request->start_date, 'or')
-                            ->whereDate('end_date', '>=', $request->end_date, 'or');
-                    })
-                    ->first();
-//            dd($select_hired_developers_by_id);
-            $store_hired_developers_by_names[] = $select_hired_developers_by_id;
-            // Validation checks.
-            if ($select_hired_developers_by_id) {
-                throw ValidationException::withMessages(['hire_error' => "Developer '$single_developer->name' already hired for this time period."]);
-            }
+        foreach ($selected_developers_to_hire as $single_developer) {
+            $collected_developers[] = $single_developer;
+            $select_hired_developers_by_names = Hire::select('*')
+                ->where('names', '=', $single_developer)
+                ->where(function ($query) use ($request) {
+                    $query->whereBetween('start_date', [$request->start_date, $request->end_date])
+                        ->orWhereBetween('end_date', [$request->start_date, $request->end_date])
+                        ->orWhere(function ($query) use ($request) {
+                            $query->where('start_date', '<=', $request->start_date)
+                                ->where('end_date', '>=', $request->end_date);
+                        });
+                })
+                ->first();
 
-            if ($request->end_date <= $request->start_date || $request->start_date < $now || $request->end_date < $now) {
+            if ($select_hired_developers_by_names) {
                 throw ValidationException::withMessages(['hire_error' => 'Select valid date.']);
             }
 
-            // Check if the looped developers count is equal to the selected developers from the list: if more than one developer is selected from the list, the loop does not exit but gets back and iterates for every other.
-            if (count($store_hired_developers_by_names) !== count($selected_developers_to_hire)) {
-                continue;
+            // Validation checks.
+            if ($request->end_date < $request->start_date) {
+                throw ValidationException::withMessages(['hire_error' => 'Select valid date.']);
             }
-            // Loop all the collected/selected in array developers and hire simultaneously.
-            foreach ($hired_devs_by_id as $dev) {
-                Hire::insert(
-                    ["names" => $dev->name, "developer_id" => $dev->id, "start_date" => $request->start_date, "end_date" => $request->end_date, 'user_hired_id' => Auth::user()->id]
-                );
+
+            if ($request->start_date < $now || $request->end_date < $now) {
+                throw ValidationException::withMessages(['hire_error' => 'Select valid date.']);
+            }
+
+            $hire_dates = Hire::select('*')->where('developer_id', '=', $single_developer)->get();
+
+            $can_hire = true;
+
+            foreach ($hire_dates as $hire_date) {
+                if (($request->start_date <= $hire_date->end_date) && ($request->end_date >= $hire_date->start_date)) {
+                    $can_hire = false;
+                    break;
+                }
+            }
+
+            if ($can_hire) {
+                // Loop all the collected/selected in array developers and hire simultaneously.
+                foreach ($collected_developers as $single_collected_developer) {
+                    foreach($hire_devs_by_names as $dev) {
+                        Hire::insert(
+                            ["names" => $single_collected_developer, "developer_id" => $dev->id, "start_date" => $request->start_date, "end_date" => $request->end_date]
+                        );
+                    }
+                }
+            } else {
+                throw ValidationException::withMessages(['hire_error' => "Developer '$single_developer->name' already hired for this time period."]);
             }
         }
     }
