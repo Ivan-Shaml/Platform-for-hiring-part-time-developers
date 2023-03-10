@@ -37,9 +37,12 @@ class HireService implements IHireService
                 Hire::select('*')
                     ->where('developer_id', '=', $single_developer->id)
                     ->where(function ($query) use ($request) {
-                        $query->whereBetween('start_date', [$request->start_date, $request->end_date])->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
+//                        $query->whereBetween('start_date', [$request->start_date, $request->end_date])->orWhereBetween('end_date', [$request->start_date, $request->end_date]);
+                        $query->whereDate('start_date', '<=', $request->start_date, 'or')
+                            ->whereDate('end_date', '>=', $request->end_date, 'or');
                     })
                     ->first();
+//            dd($select_hired_developers_by_id);
             $store_hired_developers_by_names[] = $select_hired_developers_by_id;
             // Validation checks.
             if ($select_hired_developers_by_id) {
