@@ -79,6 +79,13 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
         '401':
           description: Unauthorized.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Id of the developer to delete
     delete:
       tags:
         - Developer
